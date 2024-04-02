@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.navigationBar.prefersLargeTitles = true
         tableView.dataSource = self
         fetchPosts()
 
@@ -77,5 +78,23 @@ class ViewController: UIViewController, UITableViewDataSource {
             }
         }
         session.resume()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let selectedRow = tableView.indexPathForSelectedRow else {return}
+        
+        let selectedPost = posts[selectedRow.row]
+        
+        guard let deteilsViewController = segue.destination as? DetailsViewController else { return }
+        
+        deteilsViewController.post = selectedPost
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let selectedIndex = tableView.indexPathForSelectedRow{
+            tableView.deselectRow(at: selectedIndex, animated: animated)
+        }
     }
 }
